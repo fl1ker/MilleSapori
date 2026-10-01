@@ -1,0 +1,145 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+// =========================
+// ENUMS
+// =========================
+
+enum Role {
+  EMPLOYEE
+  ADMIN
+}
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+}
+
+
+// =========================
+// USER
+// =========================
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String?
+  role         Role     @default(EMPLOYEE)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  roomBookings    RoomBooking[]
+  parkingBookings ParkingBooking[]
+}
+
+
+// =========================
+// OFFICE
+// =========================
+
+model Office {
+  id        Int      @id @default(autoincrement())
+  name      String
+  city      String
+  address   String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  rooms         Room[]
+  parkingSpaces ParkingSpace[]
+}
+
+
+// =========================
+// ROOM
+// =========================
+
+model Room {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  capacity    Int
+  officeId    Int
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  office   Office        @relation(fields: [officeId], references: [id])
+  bookings RoomBooking[]
+
+  @@index([officeId])
+}
+
+
+// =========================
+// ROOM BOOKING
+// =========================
+
+model RoomBooking {
+  id        Int           @id @default(autoincrement())
+  userId    Int
+  roomId    Int
+  startAt   DateTime
+  endAt     DateTime
+  status    BookingStatus @default(CONFIRMED)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+  room Room @relation(fields: [roomId], references: [id])
+
+  @@index([roomId, startAt, endAt])
+  @@index([userId, startAt])
+}
+
+
+// =========================
+// PARKING SPACE
+// =========================
+
+model ParkingSpace {
+  id          Int      @id @default(autoincrement())
+  number      String
+  description String?
+  officeId    Int
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  office   Office           @relation(fields: [officeId], references: [id])
+  bookings ParkingBooking[]
+
+  @@unique([officeId, number])
+  @@index([officeId])
+}
+
+
+// =========================
+// PARKING BOOKING
+// =========================
+
+model ParkingBooking {
+  id             Int           @id @default(autoincrement())
+  userId         Int
+  parkingSpaceId Int
+  startAt        DateTime
+  endAt          DateTime
+  status         BookingStatus @default(CONFIRMED)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  user         User         @relation(fields: [userId], references: [id])
+  parkingSpace ParkingSpace @relation(fields: [parkingSpaceId], references: [id])
+
+  @@index([parkingSpaceId, startAt, endAt])
+  @@index([userId, startAt])
+}
