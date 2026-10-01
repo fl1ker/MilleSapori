@@ -1,0 +1,1 @@
+ReactDOM.render(<input placeholder="help text" />, document.getElementById("app"))
