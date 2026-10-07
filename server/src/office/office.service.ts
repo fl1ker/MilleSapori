@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { CreateOfficeDto } from './dto/create-office.dto.js';
 
 @Injectable()
 export class OfficeService {
@@ -13,29 +14,29 @@ export class OfficeService {
     });
   }
 
-  async create(name: string, city: string, address?: string) {
-    return this.prisma.office.create({
-      data: {
-        name,
-        city,
-        address,
-      },
-    });
-  }
+  async create(createOfficeDto: CreateOfficeDto) {
+  return this.prisma.office.create({
+    data: {
+      name: createOfficeDto.name,
+      city: createOfficeDto.city,
+      address: createOfficeDto.address,
+    },
+  });
+}
 
-  async update(id: number, name: string, city: string, address?: string, isActive?: boolean) {
-    return this.prisma.office.update({
-      where: {
-        id,
-      },
-      data: {
-        name,
-        city,
-        address,
-        isActive,
-      },
-    });
-  }
+  async update(id: number, createOfficeDto: CreateOfficeDto) {
+  return this.prisma.office.update({
+    where: {
+      id,
+    },
+    data: {
+      name: createOfficeDto.name,
+      city: createOfficeDto.city,
+      address: createOfficeDto.address,
+      isActive: createOfficeDto.isActive,
+    },
+  });
+}
 
   async remove(id: number) {
     return this.prisma.office.update({

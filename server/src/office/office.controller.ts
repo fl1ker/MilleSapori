@@ -14,9 +14,7 @@ export class OfficeController {
   @Post()
   create(@Body() createOfficeDto: CreateOfficeDto) {
     return this.officeService.create(
-      createOfficeDto.name,
-      createOfficeDto.city,
-      createOfficeDto.address,
+      createOfficeDto
     );
   }
 
@@ -24,10 +22,7 @@ export class OfficeController {
   update(@Param('id') id: string, @Body() createOfficeDto: CreateOfficeDto) {
     return this.officeService.update(
       Number(id),
-      createOfficeDto.name,
-      createOfficeDto.city,
-      createOfficeDto.address,
-      createOfficeDto.isActive,
+      createOfficeDto
     );
   }
 
