@@ -39,4 +39,11 @@ export class RoomService {
       },
     });
   }
+  async remove(id: number) {
+    return this.prisma.room.delete({
+      where: {
+        id,
+      },
+    });
+  }
 }

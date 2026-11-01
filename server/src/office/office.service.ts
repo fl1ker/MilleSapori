@@ -39,13 +39,10 @@ export class OfficeService {
 }
 
   async remove(id: number) {
-    return this.prisma.office.update({
-      where: {
-        id,
-      },
-      data: {
-        isActive: false,
-      },
-    });
-  }
+  return this.prisma.office.delete({
+    where: {
+      id,
+    },
+  });
+}
 }

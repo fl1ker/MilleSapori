@@ -26,10 +26,12 @@ export class RoomController {
   }
 
   @Put(':id')
-    update(@Param('id') id: string, @Body() createRoomDto: CreateRoomDto) {
-      return this.roomService.update(
-        Number(id),
-        createRoomDto
-      );
-    }
+  update(@Param('id') id: string, @Body() createRoomDto: CreateRoomDto) {
+    return this.roomService.update(Number(id), createRoomDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.roomService.remove(Number(id));
+  }
 }
